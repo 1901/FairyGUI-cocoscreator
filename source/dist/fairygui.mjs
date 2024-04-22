@@ -6340,6 +6340,8 @@ const imageAtlas = new RichTextImageAtlas();
 class GRichTextField extends GTextField {
     constructor() {
         super();
+        // ----- fixed stroke start by 1901 -----
+        this._stroke = 0;
         this._node.name = "GRichTextField";
         this._touchDisabled = false;
         this.linkUnderline = UIConfig.linkUnderline;
@@ -6383,6 +6385,21 @@ class GRichTextField extends GTextField {
             this.updateText();
         }
     }
+    get stroke() {
+        return this._stroke;
+    }
+    set stroke(value) {
+        this._stroke = value;
+    }
+    get strokeColor() {
+        return this._strokeColor;
+    }
+    set strokeColor(value) {
+        if (!this._strokeColor)
+            this._strokeColor = new Color();
+        this._strokeColor.set(value);
+    }
+    // ----- fixed stroke end by 1901 -----
     markSizeChanged() {
         //RichText貌似没有延迟重建文本，所以这里不需要
     }
@@ -6405,6 +6422,10 @@ class GRichTextField extends GTextField {
         if (this._grayed)
             c = toGrayedColor(c);
         text2 = "<color=" + c.toHEX("#rrggbb") + ">" + text2 + "</color>";
+        // fixed stroke by 1901.
+        if (this.strokeColor && this.stroke > 0) {
+            text2 = `<outline color=${this.strokeColor.toHEX("#rrggbb")} width=${this.stroke}>${text2}</outline>`;
+        }
         if (this._autoSize == AutoSizeType.Both) {
             if (this._richText.maxWidth != 0)
                 this._richText["_maxWidth"] = 0;

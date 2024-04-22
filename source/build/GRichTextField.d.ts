@@ -1,5 +1,5 @@
 /// <reference path="../lib/cc.d.ts" />
-import { HorizontalTextAlignment, RichText, SpriteAtlas, SpriteFrame } from "cc";
+import { Color, HorizontalTextAlignment, RichText, SpriteAtlas, SpriteFrame } from "cc";
 import { GTextField } from "./GTextField";
 export declare class RichTextImageAtlas extends SpriteAtlas {
     getSpriteFrame(key: string): SpriteFrame;
@@ -21,6 +21,11 @@ export declare class GRichTextField extends GTextField {
     set bold(value: boolean);
     get italic(): boolean;
     set italic(value: boolean);
+    private _stroke;
+    get stroke(): number;
+    set stroke(value: number);
+    get strokeColor(): Color;
+    set strokeColor(value: Color);
     protected markSizeChanged(): void;
     protected updateText(): void;
     protected updateFont(): void;

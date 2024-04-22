@@ -1,4 +1,4 @@
-import { BitmapFont, HorizontalTextAlignment, RichText, SpriteAtlas, SpriteFrame } from "cc";
+import { BitmapFont, Color, HorizontalTextAlignment, RichText, SpriteAtlas, SpriteFrame } from "cc";
 import { PackageItemType, AutoSizeType } from "./FieldTypes";
 import { GTextField } from "./GTextField";
 import { PackageItem } from "./PackageItem";
@@ -94,6 +94,26 @@ export class GRichTextField extends GTextField {
         }
     }
 
+    // ----- fixed stroke start by 1901 -----
+    private _stroke: number = 0;
+    public get stroke(): number {
+        return this._stroke;
+    }
+    public set stroke(value: number) {
+        this._stroke = value;
+    }
+
+    public get strokeColor(): Color {
+        return this._strokeColor;
+    }
+
+    public set strokeColor(value: Color) {
+        if (!this._strokeColor)
+            this._strokeColor = new Color();
+        this._strokeColor.set(value);
+    }
+    // ----- fixed stroke end by 1901 -----
+
     protected markSizeChanged(): void {
         //RichText貌似没有延迟重建文本，所以这里不需要
     }
@@ -121,6 +141,10 @@ export class GRichTextField extends GTextField {
         if (this._grayed)
             c = toGrayedColor(c);
         text2 = "<color=" + c.toHEX("#rrggbb") + ">" + text2 + "</color>";
+        // fixed stroke by 1901.
+        if (this.strokeColor && this.stroke > 0) {
+            text2 = `<outline color=${this.strokeColor.toHEX("#rrggbb")} width=${this.stroke}>${text2}</outline>`;
+        }
 
         if (this._autoSize == AutoSizeType.Both) {
             if (this._richText.maxWidth != 0)
