@@ -52,5 +52,10 @@ export { Event } from "./event/Event";
 export { GTween } from "./tween/GTween";
 export { GTweener } from "./tween/GTweener";
 export { EaseType } from "./tween/EaseType";
+// ----- fixed export start by 1901 -----
+export { GPath } from "./tween/GPath";
+export { GPathPoint } from "./tween/GPathPoint";
+export { TweenManager } from "./tween/TweenManager";
+// ----- fixed export end by 1901 -----
 export { UBBParser } from "./utils/UBBParser";
 export { ByteBuffer } from "./utils/ByteBuffer";
