@@ -1335,7 +1335,7 @@ declare module 'fairygui-cc/ScrollPane' {
     import { GScrollBar } from "fairygui-cc/GScrollBar";
     import { ByteBuffer } from "fairygui-cc/utils/ByteBuffer";
     export class ScrollPane extends Component {
-        _displayInDemand?: boolean;
+        _displayInDemand: boolean;
         _loop: number;
         static draggingPane: ScrollPane;
         setup(buffer: ByteBuffer): void;
@@ -1772,7 +1772,7 @@ declare module 'fairygui-cc/UIConfig' {
         static linkUnderline: boolean;
         static defaultUILayer: number;
     }
-    export function registerFont(name: string, font: Font | string, bundle?: AssetManager.Bundle): void;
+    export function registerFont(name: string, font?: Font | string, bundle?: AssetManager.Bundle): void;
     export function getFontByName(name: string): Font;
 }
 
