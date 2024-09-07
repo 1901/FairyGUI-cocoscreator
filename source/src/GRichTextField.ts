@@ -191,4 +191,10 @@ export class GRichTextField extends GTextField {
         if (this._autoSize != AutoSizeType.Both)
             this._richText.maxWidth = this._width;
     }
+
+    public handlePositionChanged(): void {
+        super.handlePositionChanged();
+        let pos = this.node.position;
+        this.node.setPosition(pos.x, pos.y - 7);
+    }
 }

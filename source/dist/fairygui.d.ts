@@ -556,6 +556,7 @@ declare module 'fairygui-cc/GRichTextField' {
         protected updateFontSize(): void;
         protected updateOverflow(): void;
         protected handleSizeChanged(): void;
+        handlePositionChanged(): void;
     }
 }
 
