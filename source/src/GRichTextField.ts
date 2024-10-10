@@ -101,16 +101,20 @@ export class GRichTextField extends GTextField {
     }
     public set stroke(value: number) {
         this._stroke = value;
+        if (value > 0)
+            this.updateStrokeColor();
+        // 描边是通过修改文字格式实现，所以需要在这里更新文字
+        this.updateText();
     }
 
     public get strokeColor(): Color {
-        return this._strokeColor;
+        return super.strokeColor;
     }
 
     public set strokeColor(value: Color) {
-        if (!this._strokeColor)
-            this._strokeColor = new Color();
-        this._strokeColor.set(value);
+        super.strokeColor = value;
+        // 描边是通过修改文字格式实现，所以需要在这里更新文字
+        this.updateText();
     }
     // ----- fixed stroke end by 1901 -----
 
