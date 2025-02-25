@@ -8573,7 +8573,8 @@ class ScrollPane extends Component {
             pos = -this._overlapSize[axis];
         else {
             //以屏幕像素为基准
-            var isMobile = sys.isMobile;
+            // var isMobile: boolean = sys.isMobile;
+            var isMobile = false;
             var v2 = Math.abs(v) * this._velocityScale;
             const winSize = screen.windowSize;
             //在移动设备上，需要对不同分辨率做一个适配，我们的速度判断以1136分辨率为基准
