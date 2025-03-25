@@ -108,11 +108,17 @@ export class GRichTextField extends GTextField {
     }
 
     public get strokeColor(): Color {
-        return super.strokeColor;
+        return this._strokeColor;
     }
 
     public set strokeColor(value: Color) {
-        super.strokeColor = value;
+        // 直接调用 super.strokeColor = value 在微信小游戏中编译成 ES5 时会造成死循环。
+        // 所以将下面几行代码从父类复制过来。
+        if (!this._strokeColor)
+            this._strokeColor = new Color();
+        this._strokeColor.set(value);
+        this.updateGear(4);
+        this.updateStrokeColor();
         // 描边是通过修改文字格式实现，所以需要在这里更新文字
         this.updateText();
     }
