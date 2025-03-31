@@ -5115,9 +5115,37 @@ class UIPackage {
             pkg.loadPackage(new ByteBuffer(buffer), path);
             let cnt = pkg._items.length;
             let urls = [];
+            let aloneTexs = [];
             for (var i = 0; i < cnt; i++) {
                 var pi = pkg._items[i];
+                // 优化内存处理：
+                //   - 将独立的贴图过滤掉不在这里加载，等需要使用的时候通过其他途径加载
+                //   - 如果包有分支，则只加载主干和当前分支的资源
+                // ===== 找出独立的贴图资源 =====
+                if (pi.type == PackageItemType.Image) {
+                    const as = pkg._sprites[pi.id];
+                    if (as.rect.x == 0 && as.rect.y == 0 &&
+                        as.rect.width == as.atlas.width &&
+                        as.rect.height == as.atlas.height) {
+                        // 记录单独的贴图，并且该 Image 也不用加载
+                        aloneTexs.push(as.atlas.file);
+                        continue;
+                    }
+                }
+                // ====================
                 if (pi.type == PackageItemType.Atlas || pi.type == PackageItemType.Sound) {
+                    // ===== 分支处理 =====
+                    if (pkg._branches && pkg._branches.length > 0) {
+                        // 当包有分支时，只加载主干和当前分支的资源（当前分支：UIPackage.branch）
+                        let willLoad = pi.file.endsWith(pi.id);
+                        willLoad = willLoad || (UIPackage.branch != '' && pi.file.endsWith(UIPackage.branch));
+                        if (!willLoad)
+                            continue;
+                    }
+                    // 独立的贴图不在这里加载
+                    if (aloneTexs.indexOf(pi.file) >= 0)
+                        continue;
+                    // ====================
                     ItemTypeToAssetType[pi.type];
                     urls.push(pi.file);
                 }
