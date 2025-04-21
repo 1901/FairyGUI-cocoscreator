@@ -1725,18 +1725,21 @@ declare module 'fairygui-cc/GObjectPool' {
 
 declare module 'fairygui-cc/UIObjectFactory' {
     import { GComponent } from "fairygui-cc/GComponent";
+    import { GList } from "fairygui-cc/GList";
     import { GLoader } from "fairygui-cc/GLoader";
     import { GObject } from "fairygui-cc/GObject";
     import { PackageItem } from "fairygui-cc/PackageItem";
     export class UIObjectFactory {
         static counter: number;
         static extensions: {
-            [index: string]: new () => GComponent;
+            [index: string]: (new () => GComponent) | (() => GComponent);
         };
         static loaderType: new () => GLoader;
+        static listType: new () => GList;
         constructor();
-        static setExtension(url: string, type: new () => GComponent): void;
+        static setExtension(url: string, type: (new () => GComponent) | (() => GComponent)): void;
         static setLoaderExtension(type: new () => GLoader): void;
+        static setListExtension(type: new () => GList): void;
         static resolveExtension(pi: PackageItem): void;
         static newObject(type: number | PackageItem, userClass?: new () => GObject): GObject;
     }

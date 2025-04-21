@@ -24,13 +24,14 @@ import { Decls, UIPackage } from "./UIPackage";
 export class UIObjectFactory {
     public static counter: number = 0;
 
-    public static extensions: { [index: string]: new () => GComponent } = {};
+    public static extensions: { [index: string]: (new () => GComponent) | (() => GComponent) } = {};
     public static loaderType: new () => GLoader;
+    public static listType: new () => GList;
 
     public constructor() {
     }
 
-    public static setExtension(url: string, type: new () => GComponent): void {
+    public static setExtension(url: string, type: (new () => GComponent) | (() => GComponent)): void {
         if (url == null)
             throw new Error("Invaild url: " + url);
 
@@ -43,6 +44,10 @@ export class UIObjectFactory {
 
     public static setLoaderExtension(type: new () => GLoader): void {
         UIObjectFactory.loaderType = type;
+    }
+
+    public static setListExtension(type: new () => GList): void {
+        UIObjectFactory.listType = type;
     }
 
     public static resolveExtension(pi: PackageItem): void {
@@ -81,7 +86,10 @@ export class UIObjectFactory {
                     return new GGroup();
 
                 case ObjectType.List:
-                    return new GList();
+                    if (UIObjectFactory.listType)
+                        return new UIObjectFactory.listType();
+                    else
+                        return new GList();
 
                 case ObjectType.Graph:
                     return new GGraph();
@@ -125,7 +133,11 @@ export class UIObjectFactory {
                 if (userClass)
                     obj = new userClass();
                 else if (type.extensionType)
-                    obj = new type.extensionType();
+                    if (type.extensionType.prototype instanceof GComponent) {
+                        obj = new type.extensionType();
+                    } else {
+                        obj = type.extensionType();
+                    }
                 else
                     obj = UIObjectFactory.newObject(type.objectType);
             }

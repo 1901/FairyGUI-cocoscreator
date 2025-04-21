@@ -17074,6 +17074,9 @@ class UIObjectFactory {
     static setLoaderExtension(type) {
         UIObjectFactory.loaderType = type;
     }
+    static setListExtension(type) {
+        UIObjectFactory.listType = type;
+    }
     static resolveExtension(pi) {
         var extensionType = UIObjectFactory.extensions["ui://" + pi.owner.id + pi.id];
         if (!extensionType)
@@ -17101,7 +17104,10 @@ class UIObjectFactory {
                 case ObjectType.Group:
                     return new GGroup();
                 case ObjectType.List:
-                    return new GList();
+                    if (UIObjectFactory.listType)
+                        return new UIObjectFactory.listType();
+                    else
+                        return new GList();
                 case ObjectType.Graph:
                     return new GGraph();
                 case ObjectType.Loader:
@@ -17134,7 +17140,12 @@ class UIObjectFactory {
                 if (userClass)
                     obj = new userClass();
                 else if (type.extensionType)
-                    obj = new type.extensionType();
+                    if (type.extensionType.prototype instanceof GObject) {
+                        obj = new type.extensionType();
+                    }
+                    else {
+                        obj = type.extensionType();
+                    }
                 else
                     obj = UIObjectFactory.newObject(type.objectType);
             }
