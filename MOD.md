@@ -72,4 +72,28 @@ index 800b9fc2b472913aeeca52b6df196a5715769b55..647d9626a8b0f669d43a86654d9dcb80
 - 增加了 `setTextFieldExtension` 方法用于扩展 GTextField
 - 增加了 `setRichTextFieldExtension` 方法用于扩展 GRichTextField
 
+# InputProcessor.ts
+```diff
+diff --git forkSrcPrefix/source/src/event/InputProcessor.ts forkDstPrefix/source/src/event/InputProcessor.ts
+index 77e4699d87ec5cc9b749b8e5cc1dd22a30601318..d79c0847659fc7518706220b9b9642f9134dab1c 100644
+--- forkSrcPrefix/source/src/event/InputProcessor.ts
++++ forkDstPrefix/source/src/event/InputProcessor.ts
+@@ -230,9 +230,13 @@ export class InputProcessor extends Component {
+         ti.touchMonitors.length = 0;
+ 
+         if (ti.target && ti.target.node) {
+-            if (ti.target instanceof GRichTextField)
+-                ti.target.node.getComponent(RichText)["_onTouchEnded"](evt);
+-
++            // MOD-1901: GRichTextField 的实现可能会变扩展替换掉，所以这里加一个获取组件的判断。
++            if (ti.target instanceof GRichTextField) {
++                let richText = ti.target.node.getComponent(RichText);
++                if (richText) {
++                    richText["_onTouchEnded"](evt);
++                }
++            }
+             evt2.unuse();
+             evt2.type = FUIEvent.TOUCH_END;
+             evt2.bubbles = true;
+```
 

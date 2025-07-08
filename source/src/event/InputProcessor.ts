@@ -230,9 +230,13 @@ export class InputProcessor extends Component {
         ti.touchMonitors.length = 0;
 
         if (ti.target && ti.target.node) {
-            if (ti.target instanceof GRichTextField)
-                ti.target.node.getComponent(RichText)["_onTouchEnded"](evt);
-
+            // MOD-1901: GRichTextField 的实现可能会变扩展替换掉，所以这里加一个获取组件的判断。
+            if (ti.target instanceof GRichTextField) {
+                let richText = ti.target.node.getComponent(RichText);
+                if (richText) {
+                    richText["_onTouchEnded"](evt);
+                }
+            }
             evt2.unuse();
             evt2.type = FUIEvent.TOUCH_END;
             evt2.bubbles = true;
