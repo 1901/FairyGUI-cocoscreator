@@ -68,7 +68,8 @@ index 800b9fc2b472913aeeca52b6df196a5715769b55..647d9626a8b0f669d43a86654d9dcb80
 
 # UIObjectFactory.ts
 - 修改了 `extensions` 支持的类型，可能是一个类，也可以是一个能返回 `GComponent` 的方法
-- 增加了 setListExtension 方法用于扩展 GList
-
+- 增加了 `setListExtension` 方法用于扩展 GList
+- 增加了 `setTextFieldExtension` 方法用于扩展 GTextField
+- 增加了 `setRichTextFieldExtension` 方法用于扩展 GRichTextField
 
 

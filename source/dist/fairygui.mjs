@@ -17077,6 +17077,12 @@ class UIObjectFactory {
     static setListExtension(type) {
         UIObjectFactory.listType = type;
     }
+    static setTextFieldExtension(type) {
+        UIObjectFactory.textFieldType = type;
+    }
+    static setRichTextFieldExtension(type) {
+        UIObjectFactory.richTextFieldType = type;
+    }
     static resolveExtension(pi) {
         var extensionType = UIObjectFactory.extensions["ui://" + pi.owner.id + pi.id];
         if (!extensionType)
@@ -17096,9 +17102,15 @@ class UIObjectFactory {
                 case ObjectType.Component:
                     return new GComponent();
                 case ObjectType.Text:
-                    return new GTextField();
+                    if (UIObjectFactory.textFieldType)
+                        return new UIObjectFactory.textFieldType();
+                    else
+                        return new GTextField();
                 case ObjectType.RichText:
-                    return new GRichTextField();
+                    if (UIObjectFactory.richTextFieldType)
+                        return new UIObjectFactory.richTextFieldType();
+                    else
+                        return new GRichTextField();
                 case ObjectType.InputText:
                     return new GTextInput();
                 case ObjectType.Group:
@@ -17140,7 +17152,7 @@ class UIObjectFactory {
                 if (userClass)
                     obj = new userClass();
                 else if (type.extensionType)
-                    if (type.extensionType.prototype instanceof GObject) {
+                    if (type.extensionType.prototype instanceof GComponent) {
                         obj = new type.extensionType();
                     }
                     else {
@@ -17397,4 +17409,4 @@ class AsyncOperationRunner extends Component {
     }
 }
 
-export { AlignType, AsyncOperation, AutoSizeType, BlendMode, ButtonMode, ByteBuffer, ChildrenRenderOrder, Controller, DragDropManager, EaseType, Event, FillMethod, FillOrigin, FlipType, GButton, GComboBox, GComponent, GGraph, GGroup, GImage, GLabel, GList, GLoader, GLoader3D, GMovieClip, GObject, GObjectPool, GPath, GPathPoint, GProgressBar, GRichTextField, GRoot, GScrollBar, GSlider, GTextField, GTextInput, GTree, GTreeNode, GTween, GTweener, GearAnimation, GearBase, GearColor, GearDisplay, GearDisplay2, GearFontSize, GearIcon, GearLook, GearSize, GearText, GearXY, GroupLayoutType, Image$1 as Image, ListLayoutType, ListSelectionMode, LoaderFillType, MovieClip, ObjectPropID, ObjectType, OverflowType, PackageItem, PackageItemType, PopupDirection, PopupMenu, ProgressTitleType, RelationType, ScrollBarDisplayType, ScrollPane, ScrollType, Transition, TranslationHelper, TweenManager, UBBParser, UIConfig, UIObjectFactory, UIPackage, VertAlignType, Window, registerFont };
+export { AlignType, AsyncOperation, AutoSizeType, BlendMode, ButtonMode, ByteBuffer, ChildrenRenderOrder, Controller, DragDropManager, EaseType, Event, FillMethod, FillOrigin, FlipType, GButton, GComboBox, GComponent, GGraph, GGroup, GImage, GLabel, GList, GLoader, GLoader3D, GMovieClip, GObject, GObjectPool, GPath, GPathPoint, GProgressBar, GRichTextField, GRoot, GScrollBar, GSlider, GTextField, GTextInput, GTree, GTreeNode, GTween, GTweener, GearAnimation, GearBase, GearColor, GearDisplay, GearDisplay2, GearFontSize, GearIcon, GearLook, GearSize, GearText, GearXY, GroupLayoutType, Image$1 as Image, ListLayoutType, ListSelectionMode, LoaderFillType, MovieClip, ObjectPropID, ObjectType, OverflowType, PackageItem, PackageItemType, PopupDirection, PopupMenu, ProgressTitleType, RelationType, ScrollBarDisplayType, ScrollPane, ScrollType, Transition, TranslationHelper, TweenManager, UBBParser, UIConfig, UIObjectFactory, UIPackage, VertAlignType, Window, defaultParser as defaultUBBParser, getFontByName, registerFont };

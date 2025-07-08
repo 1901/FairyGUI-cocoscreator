@@ -60,6 +60,8 @@ export { EaseType } from "./tween/EaseType";
 export { GPath } from "./tween/GPath";
 export { GPathPoint } from "./tween/GPathPoint";
 export { TweenManager } from "./tween/TweenManager";
+export { getFontByName } from "./UIConfig";
+export { defaultParser as defaultUBBParser } from "./utils/UBBParser"
 // ----- fixed export end by 1901 -----
 
 export { UBBParser } from "./utils/UBBParser";

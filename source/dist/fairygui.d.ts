@@ -60,6 +60,8 @@ declare module 'fairygui-cc' {
     export { GPath } from "fairygui-cc/tween/GPath";
     export { GPathPoint } from "fairygui-cc/tween/GPathPoint";
     export { TweenManager } from "fairygui-cc/tween/TweenManager";
+    export { getFontByName } from "fairygui-cc/UIConfig";
+    export { defaultParser as defaultUBBParser } from "fairygui-cc/utils/UBBParser";
     export { UBBParser } from "fairygui-cc/utils/UBBParser";
     export { ByteBuffer } from "fairygui-cc/utils/ByteBuffer";
 }
@@ -1728,6 +1730,8 @@ declare module 'fairygui-cc/UIObjectFactory' {
     import { GList } from "fairygui-cc/GList";
     import { GLoader } from "fairygui-cc/GLoader";
     import { GObject } from "fairygui-cc/GObject";
+    import { GRichTextField } from "fairygui-cc/GRichTextField";
+    import { GTextField } from "fairygui-cc/GTextField";
     import { PackageItem } from "fairygui-cc/PackageItem";
     export class UIObjectFactory {
         static counter: number;
@@ -1736,10 +1740,14 @@ declare module 'fairygui-cc/UIObjectFactory' {
         };
         static loaderType: new () => GLoader;
         static listType: new () => GList;
+        static textFieldType: new () => GTextField;
+        static richTextFieldType: new () => GRichTextField;
         constructor();
         static setExtension(url: string, type: (new () => GComponent) | (() => GComponent)): void;
         static setLoaderExtension(type: new () => GLoader): void;
         static setListExtension(type: new () => GList): void;
+        static setTextFieldExtension(type: new () => GTextField): void;
+        static setRichTextFieldExtension(type: new () => GRichTextField): void;
         static resolveExtension(pi: PackageItem): void;
         static newObject(type: number | PackageItem, userClass?: new () => GObject): GObject;
     }

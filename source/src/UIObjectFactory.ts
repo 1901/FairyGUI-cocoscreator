@@ -27,6 +27,8 @@ export class UIObjectFactory {
     public static extensions: { [index: string]: (new () => GComponent) | (() => GComponent) } = {};
     public static loaderType: new () => GLoader;
     public static listType: new () => GList;
+    public static textFieldType: new () => GTextField;
+    public static richTextFieldType: new () => GRichTextField;
 
     public constructor() {
     }
@@ -48,6 +50,14 @@ export class UIObjectFactory {
 
     public static setListExtension(type: new () => GList): void {
         UIObjectFactory.listType = type;
+    }
+
+    public static setTextFieldExtension(type: new () => GTextField): void {
+        UIObjectFactory.textFieldType = type;
+    }
+
+    public static setRichTextFieldExtension(type: new () => GRichTextField): void {
+        UIObjectFactory.richTextFieldType = type;
     }
 
     public static resolveExtension(pi: PackageItem): void {
@@ -74,10 +84,16 @@ export class UIObjectFactory {
                     return new GComponent();
 
                 case ObjectType.Text:
-                    return new GTextField();
+                    if (UIObjectFactory.textFieldType)
+                        return new UIObjectFactory.textFieldType();
+                    else
+                        return new GTextField();
 
                 case ObjectType.RichText:
-                    return new GRichTextField();
+                    if (UIObjectFactory.richTextFieldType)
+                        return new UIObjectFactory.richTextFieldType();
+                    else
+                        return new GRichTextField();
 
                 case ObjectType.InputText:
                     return new GTextInput();
