@@ -5115,7 +5115,10 @@ class UIPackage {
             pkg.loadPackage(new ByteBuffer(buffer), path);
             let cnt = pkg._items.length;
             let urls = [];
-            let aloneTexs = [];
+            // 记录单独的图集，该图集中的 Image 和 Atlas 都不用在这里加载。
+            let aloneAtlas = new Set(pkg._items
+                .filter(v => v.type == PackageItemType.Atlas && v.file.indexOf('_atlas_') >= 0)
+                .map(v => v.file));
             for (var i = 0; i < cnt; i++) {
                 var pi = pkg._items[i];
                 // 优化内存处理：
@@ -5124,27 +5127,37 @@ class UIPackage {
                 // ===== 找出独立的贴图资源 =====
                 if (pi.type == PackageItemType.Image) {
                     const as = pkg._sprites[pi.id];
-                    if (as.rect.x == 0 && as.rect.y == 0 &&
-                        as.rect.width == as.atlas.width &&
-                        as.rect.height == as.atlas.height) {
-                        // 记录单独的贴图，并且该 Image 也不用加载
-                        aloneTexs.push(as.atlas.file);
+                    if (aloneAtlas.has(as.atlas.file)) {
                         continue;
                     }
+                }
+                // 单独的图集在使用时才加载，这里跳过加载。
+                if (pi.type == PackageItemType.Atlas && aloneAtlas.has(pi.file)) {
+                    continue;
                 }
                 // ====================
                 if (pi.type == PackageItemType.Atlas || pi.type == PackageItemType.Sound) {
                     // ===== 分支处理 =====
+                    // 当包有分支时，只加载主干和当前分支的资源（当前分支：UIPackage.branch）
                     if (pkg._branches && pkg._branches.length > 0) {
-                        // 当包有分支时，只加载主干和当前分支的资源（当前分支：UIPackage.branch）
-                        let willLoad = pi.file.endsWith(pi.id);
-                        willLoad = willLoad || (UIPackage.branch != '' && pi.file.endsWith(UIPackage.branch));
-                        if (!willLoad)
-                            continue;
+                        // 用最后一位是否数字来判断是否为分支图集
+                        const lastchar = pi.file.substring(pi.file.length - 1);
+                        const isBranchAtlas = isNaN(Number(lastchar));
+                        // 未设置分支或分支不匹配时不加载任何分支的资源
+                        if (UIPackage.branch == '' || pkg._branches.indexOf(UIPackage.branch) < 0) {
+                            if (isBranchAtlas) {
+                                // console.log(">>> skip load branch atlas:", pi.file);
+                                continue;
+                            }
+                        }
+                        else {
+                            // 当前是分支图集，但与当前分支不匹配。
+                            if (isBranchAtlas && !pi.file.endsWith(UIPackage.branch)) {
+                                // console.log(">>> skip load not matched branch atlas:", pi.file);
+                                continue;
+                            }
+                        }
                     }
-                    // 独立的贴图不在这里加载
-                    if (aloneTexs.indexOf(pi.file) >= 0)
-                        continue;
                     // ====================
                     ItemTypeToAssetType[pi.type];
                     urls.push(pi.file);
