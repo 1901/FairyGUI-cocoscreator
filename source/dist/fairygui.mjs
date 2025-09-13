@@ -5950,7 +5950,7 @@ class GTextField extends GObject {
             if (newFont.startsWith("ui://")) {
                 var pi = UIPackage.getItemByURL(newFont);
                 if (pi)
-                    newFont = pi.owner.getItemAsset(pi);
+                    newFont = pi.owner.getItemAsset(pi.getBranch());
                 else
                     newFont = UIConfig.defaultFont;
             }

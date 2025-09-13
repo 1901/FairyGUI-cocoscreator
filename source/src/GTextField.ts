@@ -82,7 +82,7 @@ export class GTextField extends GObject {
             if (newFont.startsWith("ui://")) {
                 var pi: PackageItem = UIPackage.getItemByURL(newFont);
                 if (pi)
-                    newFont = <Font>pi.owner.getItemAsset(pi);
+                    newFont = <Font>pi.owner.getItemAsset(pi.getBranch());
                 else
                     newFont = UIConfig.defaultFont;
             }
